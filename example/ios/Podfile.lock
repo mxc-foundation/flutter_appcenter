@@ -1,0 +1,105 @@
+PODS:
+  - android_metadata (0.0.1):
+    - Flutter
+  - AppCenter (3.2.0):
+    - AppCenter/Analytics (= 3.2.0)
+    - AppCenter/Crashes (= 3.2.0)
+  - AppCenter/Analytics (3.2.0):
+    - AppCenter/Core
+  - AppCenter/Core (3.2.0)
+  - AppCenter/Crashes (3.2.0):
+    - AppCenter/Core
+  - AppCenter/Distribute (3.2.0):
+    - AppCenter/Core
+  - Flutter (1.0.0)
+  - flutter_appcenter (1.0.9):
+    - AppCenter (~> 3.2.0)
+    - AppCenter/Distribute (~> 3.2.0)
+    - Flutter
+  - install_plugin (0.0.1):
+    - Flutter
+  - open_appstore (0.0.1):
+    - Flutter
+  - package_info (0.0.1):
+    - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+  - path_provider_linux (0.0.1):
+    - Flutter
+  - path_provider_macos (0.0.1):
+    - Flutter
+  - "permission_handler (5.0.1+1)":
+    - Flutter
+  - url_launcher (0.0.1):
+    - Flutter
+  - url_launcher_macos (0.0.1):
+    - Flutter
+  - url_launcher_web (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - android_metadata (from `.symlinks/plugins/android_metadata/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_appcenter (from `.symlinks/plugins/flutter_appcenter/ios`)
+  - install_plugin (from `.symlinks/plugins/install_plugin/ios`)
+  - open_appstore (from `.symlinks/plugins/open_appstore/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
+  - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - url_launcher_macos (from `.symlinks/plugins/url_launcher_macos/ios`)
+  - url_launcher_web (from `.symlinks/plugins/url_launcher_web/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AppCenter
+
+EXTERNAL SOURCES:
+  android_metadata:
+    :path: ".symlinks/plugins/android_metadata/ios"
+  Flutter:
+    :path: Flutter
+  flutter_appcenter:
+    :path: ".symlinks/plugins/flutter_appcenter/ios"
+  install_plugin:
+    :path: ".symlinks/plugins/install_plugin/ios"
+  open_appstore:
+    :path: ".symlinks/plugins/open_appstore/ios"
+  package_info:
+    :path: ".symlinks/plugins/package_info/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  path_provider_linux:
+    :path: ".symlinks/plugins/path_provider_linux/ios"
+  path_provider_macos:
+    :path: ".symlinks/plugins/path_provider_macos/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
+  url_launcher_macos:
+    :path: ".symlinks/plugins/url_launcher_macos/ios"
+  url_launcher_web:
+    :path: ".symlinks/plugins/url_launcher_web/ios"
+
+SPEC CHECKSUMS:
+  android_metadata: 5f0330219e62dbc94a1e0afc0d23c087c6c6f8db
+  AppCenter: ca66175050d538b157959382dd43f1ab96cdab84
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_appcenter: bd234f8bd6920f7897f36cf24c4bde74e6570470
+  install_plugin: a13e7ddd2bab0c701b48cd359c26d0394125b6fb
+  open_appstore: 4eddfae38848002fdde8d42e1734d16cb34439de
+  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  path_provider_linux: 4d630dc393e1f20364f3e3b4a2ff41d9674a84e4
+  path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
+  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
+  url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
+
+PODFILE CHECKSUM: 19ef15fd13250caff5e5c9c73c79633c29537b87
+
+COCOAPODS: 1.9.3
