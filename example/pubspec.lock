@@ -7,6 +7,7 @@ packages:
       name: android_metadata
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.2.1"
   app_installer:
     dependency: transitive
@@ -15,6 +16,9 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+=======
+    version: "0.1.3"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
   async:
     dependency: transitive
     description:
@@ -69,6 +73,7 @@ packages:
     description:
       name: dio
       url: "https://pub.dartlang.org"
+<<<<<<< HEAD
     source: hosted
     version: "4.0.0"
   fake_async:
@@ -84,6 +89,23 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
+=======
+    source: hosted
+    version: "4.0.0"
+  fake_async:
+    dependency: transitive
+    description:
+      name: fake_async
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
+  ffi:
+    dependency: transitive
+    description:
+      name: ffi
+      url: "https://pub.dartlang.org"
+    source: hosted
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
     version: "1.0.0"
   file:
     dependency: transitive
@@ -121,6 +143,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+<<<<<<< HEAD
   js:
     dependency: transitive
     description:
@@ -135,6 +158,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+=======
+  install_plugin:
+    dependency: transitive
+    description:
+      name: install_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.3"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
   matcher:
     dependency: transitive
     description:
@@ -147,6 +186,16 @@ packages:
     description:
       name: meta
       url: "https://pub.dartlang.org"
+<<<<<<< HEAD
+=======
+    source: hosted
+    version: "1.3.0"
+  open_appstore:
+    dependency: transitive
+    description:
+      name: open_appstore
+      url: "https://pub.dartlang.org"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
     source: hosted
     version: "1.3.0"
   package_info:
@@ -155,7 +204,11 @@ packages:
       name: package_info
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "2.0.0"
+=======
+    version: "0.4.3+4"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
   path:
     dependency: transitive
     description:
@@ -197,14 +250,22 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "2.0.0"
+=======
+    version: "2.0.1"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
   permission_handler:
     dependency: transitive
     description:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "7.1.0"
+=======
+    version: "6.1.3"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
   permission_handler_platform_interface:
     dependency: transitive
     description:
@@ -233,6 +294,16 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.1"
+<<<<<<< HEAD
+=======
+  progress_dialog:
+    dependency: transitive
+    description:
+      name: progress_dialog
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.4"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
   sky_engine:
     dependency: transitive
     description: flutter
@@ -292,6 +363,7 @@ packages:
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"
+<<<<<<< HEAD
     source: hosted
     version: "6.0.3"
   url_launcher_linux:
@@ -300,6 +372,16 @@ packages:
       name: url_launcher_linux
       url: "https://pub.dartlang.org"
     source: hosted
+=======
+    source: hosted
+    version: "6.0.3"
+  url_launcher_linux:
+    dependency: transitive
+    description:
+      name: url_launcher_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
     version: "2.0.0"
   url_launcher_macos:
     dependency: transitive
@@ -314,7 +396,11 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "2.0.1"
+=======
+    version: "2.0.2"
+>>>>>>> 5f7aac660d3a218c06f26b3b1b002efbed3ec172
   url_launcher_web:
     dependency: transitive
     description:
