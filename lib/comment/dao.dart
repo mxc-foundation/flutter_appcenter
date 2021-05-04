@@ -7,13 +7,13 @@ class Dao {
   static String baseUrl = Configs.baseUrl;
   static String token = '';
 
-  Response response;
-  Dio dio;
+  Response? response;
+  late Dio dio;
 
   // Single Mode
-  factory Dao() => _getInstance();
-  static Dao get instance => _getInstance();
-  static Dao _instance;
+  factory Dao() => _getInstance()!;
+  static Dao? get instance => _getInstance();
+  static Dao? _instance;
 
   Dao._internal() {
     // initialization
@@ -22,14 +22,14 @@ class Dao {
     dio.options.headers = {'X-API-Token': token};
   }
 
-  static Dao _getInstance() {
+  static Dao? _getInstance() {
     if (_instance == null) {
       _instance = new Dao._internal();
     }
     return _instance;
   }
 
-  Future<dynamic> get({String url, Map data}) async {
+  Future<dynamic> get({required String url, Map? data}) async {
     try {
       Response response = await dio.get(
         url,
@@ -41,12 +41,13 @@ class Dao {
         return response.data;
       }
     } on DioError catch (e) {
-      throw e.response != null ? e.response.data['message'] : e.message;
+      throw e.response != null ? e.response!.data['message'] : e.message;
     }
   }
 
-  Future<File> downloadAndroid(String url,Function showDownloadProgress) async {
-    Directory storageDir = await getExternalStorageDirectory();
+  Future<File> downloadAndroid(
+      String url, Function showDownloadProgress) async {
+    Directory storageDir = (await getExternalStorageDirectory())!;
     String storagePath = storageDir.path;
     File file = new File('$storagePath/download_app');
 
@@ -54,20 +55,13 @@ class Dao {
       file.createSync();
     }
 
-    try {
-      Response response = await dio.get(  
-        url,
-        onReceiveProgress: showDownloadProgress,
+    Response response = await dio.get(url,
+        onReceiveProgress: showDownloadProgress as void Function(int, int)?,
         options: Options(
           responseType: ResponseType.bytes,
           followRedirects: false,
-        )
-      );
-      file.writeAsBytesSync(response.data);
-      return file;
-    } catch (e) {
-      print(e);
-      return e;
-    }
+        ));
+    file.writeAsBytesSync(response.data);
+    return file;
   }
 }

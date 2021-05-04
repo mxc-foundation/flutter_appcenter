@@ -5,21 +5,20 @@ version: 1.0.11
 homepage: https://github.com/mxc-foundation/flutter_appcenter
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  android_metadata: ^0.1.2
+  android_metadata: ^0.2.1
   dio: ^4.0.0
-  install_plugin: ^2.0.1
-  package_info: ^0.4.1
+  app_installer: ^1.0.0
+  package_info: ^2.0.0
   path_provider: ^2.0.1
-  permission_handler: ^6.1.3
-  progress_dialog: ^1.2.4
+  permission_handler: ^7.1.0
   url_launcher: ^6.0.3
-  open_appstore: ^1.0.2
+  launch_review: ^3.0.1
 
 dev_dependencies:
   flutter_test:

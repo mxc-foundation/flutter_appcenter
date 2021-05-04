@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class UpdateDialog extends StatelessWidget {
   UpdateDialog({
-    @required this.title,
-    @required this.content,
-    @required this.onConfirm,
+    required this.title,
+    required this.content,
+    required this.onConfirm,
     this.onMiddle,
     this.subTitle,
     this.mandatoryUpdate = false,
@@ -16,16 +16,16 @@ class UpdateDialog extends StatelessWidget {
     this.onCancel,
   });
 
-  final bool mandatoryUpdate;
+  final bool? mandatoryUpdate;
   final String title;
-  final String subTitle;
-  final String content;
-  final String confirmButtonText;
-  final String middleButtonText;
-  final String cancelButtonText;
+  final String? subTitle;
+  final String? content;
+  final String? confirmButtonText;
+  final String? middleButtonText;
+  final String? cancelButtonText;
   final Function onConfirm;
-  final Function onMiddle;
-  final Function onCancel;
+  final Function? onMiddle;
+  final Function? onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class UpdateDialog extends StatelessWidget {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                subTitle,
+                subTitle!,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontWeight: FontWeight.bold
@@ -48,7 +48,7 @@ class UpdateDialog extends StatelessWidget {
               ),
             ),
             Text(
-              content,
+              content!,
               textAlign: TextAlign.left,
               style: TextStyle(
                 height: 1.5
@@ -59,22 +59,22 @@ class UpdateDialog extends StatelessWidget {
       ),
       actions: [
         Visibility(
-          visible: !mandatoryUpdate,
+          visible: !mandatoryUpdate!,
           child: FlatButton(
             child: Text(
-              cancelButtonText,
+              cancelButtonText!,
               style: TextStyle(
                 color: Colors.grey[600]
               ),
             ),
-            onPressed: onCancel ?? () => Navigator.pop(context)
+            onPressed: onCancel as void Function()? ?? () => Navigator.pop(context)
           )
         ),
         Visibility(
-          visible: middleButtonText.isNotEmpty,
+          visible: middleButtonText!.isNotEmpty,
           child: FlatButton(
             child: Text(
-              middleButtonText,
+              middleButtonText!,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue
@@ -82,13 +82,13 @@ class UpdateDialog extends StatelessWidget {
             ),
             onPressed: (){
               Navigator.pop(context);
-              if(onMiddle != null) onMiddle();
+              if(onMiddle != null) onMiddle!();
             }
           ),
          ),
         FlatButton(
           child: Text(
-            confirmButtonText,
+            confirmButtonText!,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.blue
