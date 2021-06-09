@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:app_installer/app_installer.dart';
-import 'package:flutter_appcenter/comment/dao.dart';
 
-Future<Null> installApk(
-    String url, String appId, Function showDownloadProgress) async {
-  File _apkFile = await Dao().downloadAndroid(url, showDownloadProgress);
-  String _apkFilePath = _apkFile.path;
+Future<Null> installApk(String url, String appId, File apkFile) async {
+  String _apkFilePath = apkFile.path;
 
   if (_apkFilePath.isEmpty) {
     print('make sure the apk file is set');

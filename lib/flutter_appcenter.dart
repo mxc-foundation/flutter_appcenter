@@ -3,18 +3,16 @@ library flutter_appcenter;
 import 'dart:async';
 import 'dart:io';
 
-import 'package:android_metadata/android_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_appcenter/comment/check_permission.dart';
 import 'package:flutter_appcenter/comment/configs.dart';
 import 'package:flutter_appcenter/comment/dao.dart';
-import 'package:flutter_appcenter/comment/install_app.dart';
+import 'package:flutter_appcenter/comment/update_handler.dart';
 import 'package:flutter_appcenter/components/update_dialog.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+export 'comment/update_handler.dart';
 import 'components/progress_dialog.dart';
 
 class FlutterAppCenter {
@@ -66,7 +64,7 @@ class FlutterAppCenter {
 
     assert(appSecret != null && appSecret!.isNotEmpty,
         'appSecret must be not null.');
-    assert(token != null && token.isNotEmpty, 'token must be not null.');
+    assert(token.isNotEmpty, 'token must be not null.');
 
     try {
       String? result = await _channel.invokeMethod('initAppCenter', args);
@@ -92,12 +90,8 @@ class FlutterAppCenter {
 
   /// update dialog
   static Future<bool> checkForUpdate(
-    BuildContext context, {
-
-    /// aim to replace appcenter's download url if it is not empty
-    String downloadUrlAndroid: '',
-    String channelGooglePlay: 'play',
-    String channelProduct: 'prod',
+    BuildContext context,
+    UpdateHandler handler, {
     required Map<String, String?> dialog,
   }) async {
     PackageInfo _packageInfo = await PackageInfo.fromPlatform();
@@ -128,44 +122,18 @@ class FlutterAppCenter {
           'middleButtonText and betaUrl both must be not null or empty.');
     }
 
-    void checkUpdateForAndroid() async {
-      Map<String, dynamic> metadata = await (AndroidMetadata.metaDataAsMap as FutureOr<Map<String, dynamic>>);
-      if (metadata['UMENG_CHANNEL'] == channelGooglePlay) {
-        try {
-          LaunchReview.launch(
-            androidAppId: _packageInfo.packageName,
-          );
-        } catch (e) {
-          String storeLink = Configs.googlePlayStore(_packageInfo.packageName);
+    void onProgress(int progress, int total) async {
+      _dialogKey.currentState!.setValue(progress / total);
 
-          if (await canLaunch(storeLink)) {
-            await launch(storeLink);
-          } else {
-            throw ('can not open google play');
-          }
-        }
-      } else {
-        /// channels of the others
-        if (await checkPermission()) {
-          if (downloadUrlAndroid.isNotEmpty) {
-            _requestResult['download_url'] = downloadUrlAndroid;
-          }
-          print(_requestResult['download_url']);
-          try {
-            await installApk(
-                _requestResult['download_url'], _packageInfo.packageName,
-                (received, total) async {
-              _dialogKey.currentState!.setValue(received / total);
-
-              if (received == total) {
-                Navigator.of(_dialogKey.currentContext!).pop();
-              }
-            });
-          } catch (e) {
-            print('fail to update: $e');
-          }
-        }
+      if (progress == total) {
+        Navigator.of(_dialogKey.currentContext!).pop();
       }
+    }
+
+    void checkUpdateForAndroid() async {
+      await handler.handle(onReceiveProgress: onProgress);
+      if (_dialogKey.currentContext != null)
+        Navigator.of(_dialogKey.currentContext!).pop();
     }
 
     void checkUpdateAppForBeta() async {
@@ -183,7 +151,7 @@ class FlutterAppCenter {
     void checkUpdateAppForIOS() async {
       if (appId.isNotEmpty) {
         LaunchReview.launch(
-          androidAppId: appId,
+          iOSAppId: appId,
         );
       } else {
         checkUpdateAppForBeta();
