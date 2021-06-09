@@ -44,30 +44,4 @@ class Dao {
       throw e.response != null ? e.response.data['message'] : e.message;
     }
   }
-
-  Future<File> downloadAndroid(String url,Function showDownloadProgress) async {
-    Directory storageDir = await getExternalStorageDirectory();
-    String storagePath = storageDir.path;
-    File file = new File('$storagePath/download_app');
-
-    if (!file.existsSync()) {
-      file.createSync();
-    }
-
-    try {
-      Response response = await dio.get(  
-        url,
-        onReceiveProgress: showDownloadProgress,
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: false,
-        )
-      );
-      file.writeAsBytesSync(response.data);
-      return file;
-    } catch (e) {
-      print(e);
-      return e;
-    }
-  }
 }

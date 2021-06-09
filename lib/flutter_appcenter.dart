@@ -3,14 +3,11 @@ library flutter_appcenter;
 import 'dart:async';
 import 'dart:io';
 
-import 'package:android_metadata/android_metadata.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_appcenter/comment/check_permission.dart';
 import 'package:flutter_appcenter/comment/configs.dart';
 import 'package:flutter_appcenter/comment/dao.dart';
-import 'package:flutter_appcenter/comment/install_app.dart';
+import 'package:flutter_appcenter/comment/update_handler.dart';
 import 'package:flutter_appcenter/components/update_dialog.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:package_info/package_info.dart';
@@ -18,7 +15,8 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FlutterAppCenter {
-  static const MethodChannel _channel = const MethodChannel('flutter_appcenter');
+  static const MethodChannel _channel =
+      const MethodChannel('flutter_appcenter');
   static String appSecret = '';
   static String token = '';
   static String appId = '';
@@ -43,28 +41,29 @@ class FlutterAppCenter {
 
     /// when automaticCheckForUpdate is false, can use checkForUpdate method to update
     // bool automaticCheckForUpdate = true,
-  
   }) async {
     Map<String, Object> args = {
       'appSecret': Platform.isAndroid ? appSecretAndroid : appSecretIOS,
       'usePrivateTrack': usePrivateTrack,
+
       /// if true, check update for showing dialog
       'automaticCheckForUpdate': false,
     };
 
     appSecret = args['appSecret'];
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       token = tokenAndroid ?? '';
       appId = appIdAndroid ?? '';
       betaUrl = betaUrlAndroid ?? '';
-    }else{
+    } else {
       token = tokenIOS ?? '';
       appId = appIdIOS ?? '';
       betaUrl = betaUrlIOS ?? '';
     }
 
-    assert(appSecret != null && appSecret.isNotEmpty,'appSecret must be not null.');
-    assert(token != null && token.isNotEmpty,'token must be not null.');
+    assert(appSecret != null && appSecret.isNotEmpty,
+        'appSecret must be not null.');
+    assert(token != null && token.isNotEmpty, 'token must be not null.');
 
     try {
       String result = await _channel.invokeMethod('initAppCenter', args);
@@ -76,7 +75,7 @@ class FlutterAppCenter {
   }
 
   /// Check if App Center Distribute is enabled
-  static Future<bool> isEnabledForDistribute() async{
+  static Future<bool> isEnabledForDistribute() async {
     try {
       String result = await _channel.invokeMethod('isEnabledForDistribute');
       return result == '1';
@@ -87,137 +86,121 @@ class FlutterAppCenter {
   }
 
   /// update dialog
-  static Future<bool> checkForUpdate(BuildContext context,{
-    /// aim to replace appcenter's download url if it is not empty
-    String downloadUrlAndroid: '',
-    String channelGooglePlay: 'play',
-    String channelProduct: 'prod',
-    Map<String, String> dialog
-  }) async{
-    final ProgressDialog _progress = ProgressDialog(context,isDismissible: false);
+  static Future<bool> checkForUpdate(
+    BuildContext context,
+    UpdateHandler handler, {
+    Map<String, String> dialog,
+  }) async {
+    final ProgressDialog _progress =
+        ProgressDialog(context, isDismissible: false);
     PackageInfo _packageInfo = await PackageInfo.fromPlatform();
     var _requestResult;
 
-    dialog['title'] = dialog.containsKey('title') ? dialog['title'] : 'App update avaiable';
-    dialog['subTitle'] = dialog.containsKey('subTitle') ? dialog['subTitle'] : '';
-    dialog['content'] = dialog.containsKey('content') ? dialog['content'] : ''; // defualt to show the releaseNotes and version
-    dialog['confirmButtonText'] = dialog.containsKey('confirmButtonText') ? dialog['confirmButtonText'] : 'Confirm';
-    dialog['middleButtonText'] = dialog.containsKey('middleButtonText') ? dialog['middleButtonText'] : '';
-    dialog['cancelButtonText'] = dialog.containsKey('cancelButtonText') ? dialog['cancelButtonText'] : 'Postpone';
-    dialog['downloadingText'] = dialog.containsKey('downloadingText') ? dialog['downloadingText'] : 'Downloading File...';
-    
-    if(dialog['middleButtonText'].isNotEmpty){
-      assert(betaUrl.isNotEmpty,'middleButtonText and betaUrl both must be not null or empty.');
+    dialog['title'] =
+        dialog.containsKey('title') ? dialog['title'] : 'App update avaiable';
+    dialog['subTitle'] =
+        dialog.containsKey('subTitle') ? dialog['subTitle'] : '';
+    dialog['content'] = dialog.containsKey('content')
+        ? dialog['content']
+        : ''; // defualt to show the releaseNotes and version
+    dialog['confirmButtonText'] = dialog.containsKey('confirmButtonText')
+        ? dialog['confirmButtonText']
+        : 'Confirm';
+    dialog['middleButtonText'] = dialog.containsKey('middleButtonText')
+        ? dialog['middleButtonText']
+        : '';
+    dialog['cancelButtonText'] = dialog.containsKey('cancelButtonText')
+        ? dialog['cancelButtonText']
+        : 'Postpone';
+    dialog['downloadingText'] = dialog.containsKey('downloadingText')
+        ? dialog['downloadingText']
+        : 'Downloading File...';
+
+    if (dialog['middleButtonText'].isNotEmpty) {
+      assert(betaUrl.isNotEmpty,
+          'middleButtonText and betaUrl both must be not null or empty.');
     }
 
-    void checkUpdateForAndroid() async{
-      Map<String, dynamic> metadata = await AndroidMetadata.metaDataAsMap;
-      if(metadata['UMENG_CHANNEL'] == channelGooglePlay){
+    void onProgress(int progress, int total) async {
+      _progress.update(
+        message: dialog['downloadingText'],
+        progress: progress / total,
+        progressWidget: Container(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(value: progress / total)),
+        maxProgress: 1,
+      );
+
+      if (progress == total) {
         await _progress.hide();
-        try{
-          OpenAppstore.launch(androidAppId: _packageInfo.packageName);
-        }catch(e){
-          String storeLink = Configs.googlePlayStore(_packageInfo.packageName);
-
-          if (await canLaunch(storeLink)) {
-            await launch(storeLink);
-          } else {
-            throw('can not open google play');
-          }
-        }
-      }else{ /// channels of the others
-        if(await checkPermission()){
-          if(downloadUrlAndroid.isNotEmpty){
-            _requestResult['download_url'] = downloadUrlAndroid;
-          }
-          print(_requestResult['download_url']);
-          try{
-            await installApk(_requestResult['download_url'],_packageInfo.packageName,(received, total) async{
-              _progress.update(
-                message: dialog['downloadingText'],
-                progress: received/total,
-                progressWidget: Container(
-                  padding: EdgeInsets.all(8.0), child: CircularProgressIndicator(
-                    value: received/total
-                  )
-                ),
-                maxProgress: 1,
-              );
-
-              if(received == total){
-                await _progress.hide();
-              }
-            });
-          }catch(e){
-            _progress.update(
-              message: 'fail to update: $e'
-            );
-            await _progress.hide();
-          }
-        }
       }
     }
 
-    void checkUpdateAppForBeta() async{
-      if(await canLaunch(betaUrl)) {
+    void checkUpdateForAndroid() async {
+      await handler.handle(onReceiveProgress: onProgress);
+      await _progress.hide();
+    }
+
+    void checkUpdateAppForBeta() async {
+      if (await canLaunch(betaUrl)) {
         await launch(betaUrl);
       } else {
-        if(betaUrl.contains('itms-beta')){
+        if (betaUrl.contains('itms-beta')) {
           await launch(betaUrl.replaceFirst(new RegExp(r'itms-beta'), 'https'));
-        }else{
+        } else {
           print('can not open testflight');
         }
       }
     }
 
-    void checkUpdateAppForIOS() async{
-      if(appId.isNotEmpty){
+    void checkUpdateAppForIOS() async {
+      if (appId.isNotEmpty) {
         OpenAppstore.launch(iOSAppId: appId);
-      }else{
+      } else {
         checkUpdateAppForBeta();
       }
     }
 
-    void showUpdateDialog() async{
+    void showUpdateDialog() async {
       String content = '';
-      dialog['subTitle'] = dialog['subTitle'] + ' ${_requestResult['short_version']}(${_requestResult['version']})';
+      dialog['subTitle'] = dialog['subTitle'] +
+          ' ${_requestResult['short_version']}(${_requestResult['version']})';
 
-      if(dialog['content'].isNotEmpty){
+      if (dialog['content'].isNotEmpty) {
         content = dialog['content'];
-      }else{
+      } else {
         content = _requestResult['release_notes'];
       }
 
-      if(dialogUpdateSingle == null){
+      if (dialogUpdateSingle == null) {
         dialogUpdateSingle = await showDialog(
-          context: context,
-          builder: (BuildContext ctx) {
-            return UpdateDialog(
-              mandatoryUpdate: _requestResult['mandatory_update'],
-              title: '${dialog['title']}',
-              subTitle: dialog['subTitle'],
-              content: content,
-              confirmButtonText: dialog['confirmButtonText'],
-              middleButtonText: dialog['middleButtonText'],
-              cancelButtonText: dialog['cancelButtonText'],
-              onMiddle: () async{
-                if(Platform.isIOS && betaUrl.isNotEmpty){
-                  checkUpdateAppForBeta();
-                }
-              },
-              onConfirm: () async{
-                await _progress.show();
-                if(Platform.isAndroid){
-                  checkUpdateForAndroid();
-                }else{
-                  await _progress.hide();
-                  checkUpdateAppForIOS();
-                }
-              },
-            );
-          }
-        );
-      }else{
+            context: context,
+            builder: (BuildContext ctx) {
+              return UpdateDialog(
+                mandatoryUpdate: _requestResult['mandatory_update'],
+                title: '${dialog['title']}',
+                subTitle: dialog['subTitle'],
+                content: content,
+                confirmButtonText: dialog['confirmButtonText'],
+                middleButtonText: dialog['middleButtonText'],
+                cancelButtonText: dialog['cancelButtonText'],
+                onMiddle: () async {
+                  if (Platform.isIOS && betaUrl.isNotEmpty) {
+                    checkUpdateAppForBeta();
+                  }
+                },
+                onConfirm: () async {
+                  await _progress.show();
+                  if (Platform.isAndroid) {
+                    checkUpdateForAndroid();
+                  } else {
+                    await _progress.hide();
+                    checkUpdateAppForIOS();
+                  }
+                },
+              );
+            });
+      } else {
         dialogUpdateSingle();
       }
     }
@@ -226,7 +209,7 @@ class FlutterAppCenter {
     String _version = _packageInfo.version;
     String _buildNumber = _packageInfo.buildNumber;
     print('local version: $_version+$_buildNumber');
-    if(_version == _buildNumber){
+    if (_version == _buildNumber) {
       _buildNumber = '0';
     }
 
@@ -236,20 +219,23 @@ class FlutterAppCenter {
     _requestResult = await dao.get(url: Configs.latestVersionUrl(appSecret));
 
     print('latestUrl:${Configs.latestVersionUrl(appSecret)}');
-    print('remote version: ${_requestResult['short_version']}+${_requestResult['version']}');
+    print(
+        'remote version: ${_requestResult['short_version']}+${_requestResult['version']}');
 
     /// step 3: compare the app's verion and build number with the remote's
-    if(_version != _requestResult['short_version']){
+    if (_version != _requestResult['short_version']) {
       List<String> versionArr = _version.split('.');
-      List<String> remoteVersionArr = _requestResult['short_version'].split('.');
+      List<String> remoteVersionArr =
+          _requestResult['short_version'].split('.');
 
-      for(int i = 0; i < remoteVersionArr.length; i++){
-        if(int.parse(remoteVersionArr[i]) > int.parse(versionArr[i])){
+      for (int i = 0; i < remoteVersionArr.length; i++) {
+        if (int.parse(remoteVersionArr[i]) > int.parse(versionArr[i])) {
           showUpdateDialog();
           return true;
         }
       }
-    }else if(_buildNumber != _requestResult['version'] && int.parse(_requestResult['version']) > int.parse(_buildNumber)){
+    } else if (_buildNumber != _requestResult['version'] &&
+        int.parse(_requestResult['version']) > int.parse(_buildNumber)) {
       showUpdateDialog();
       return true;
     }
