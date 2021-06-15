@@ -100,13 +100,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
-  install_plugin:
-    dependency: "direct main"
-    description:
-      name: install_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   js:
     dependency: transitive
     description:
@@ -135,6 +128,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  open_file:
+    dependency: "direct main"
+    description:
+      name: open_file
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   package_info:
     dependency: "direct main"
     description:

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:install_plugin/install_plugin.dart';
+import 'package:open_file/open_file.dart';
 
 Future<Null> installApk(String url, String appId, File apkFile) async {
   String _apkFilePath = apkFile.path;
@@ -10,7 +10,7 @@ Future<Null> installApk(String url, String appId, File apkFile) async {
     return;
   }
 
-  InstallPlugin.installApk(_apkFilePath, appId).then((result) {
+  OpenFile.open(_apkFilePath).then((result) {
     print('install apk $result');
   }).catchError((error) {
     print('install apk error: $error');

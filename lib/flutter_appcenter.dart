@@ -1,5 +1,7 @@
 library flutter_appcenter;
 
+export 'package:flutter_appcenter/comment/update_handler.dart';
+
 import 'dart:async';
 import 'dart:io';
 
